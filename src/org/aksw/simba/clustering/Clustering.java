@@ -15,6 +15,7 @@ import org.la4j.vector.Vector;
 import org.la4j.vector.Vectors;
 import java.util.HashSet;
 import java.util.Map;
+import org.la4j.matrix.dense.Basic2DMatrix;
 
 /**
  * Assume a latent feature matrix as well as a known similarity for the entities
@@ -57,10 +58,11 @@ public class Clustering {
                     }
                     if (similarity >= threshold) {
                         writer.println(i + "\t" + j + "\t" + similarity);
+                        System.out.println(i + "\t" + j + "\t" + similarity);
                     }
                 }
             }
-
+            writer.close();
             //cluster graph
             BorderFlowHard bf = new BorderFlowHard(f.getAbsolutePath());
             bf.hardPartitioning = true;
@@ -81,4 +83,17 @@ public class Clustering {
         }
         return null;
     }
+    
+    public static void test()
+    {
+           Basic2DMatrix M = new Basic2DMatrix(new double[][]{{5, 3, 0, 1}, {5, 2, 0, 1}, {1, 0, 0, 7}, {1, 0, 0, 6}});
+           Clustering c = new Clustering();
+           System.out.println(c.cluster(M, null, 0.6));
+    }
+    
+    public static void main(String args[])
+    {
+        test();
+    }
+    
 }
