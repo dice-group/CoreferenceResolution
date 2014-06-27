@@ -4,18 +4,19 @@
  */
 package org.aksw.simba.clustering;
 
-import de.uni_leipzig.gk.cluster.BorderFlowHard;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
 import org.la4j.matrix.Matrix;
 import org.la4j.vector.Vector;
 import org.la4j.vector.Vectors;
-import java.util.HashSet;
-import java.util.Map;
-import org.la4j.matrix.dense.Basic2DMatrix;
+
+import de.uni_leipzig.gk.cluster.BorderFlowHard;
 
 /**
  * Assume a latent feature matrix as well as a known similarity for the entities
@@ -84,16 +85,6 @@ public class Clustering {
         return null;
     }
     
-    public static void test()
-    {
-           Basic2DMatrix M = new Basic2DMatrix(new double[][]{{5, 3, 0, 1}, {5, 2, 0, 1}, {1, 0, 0, 7}, {1, 0, 0, 6}});
-           Clustering c = new Clustering();
-           System.out.println(c.cluster(M, null, 0.6));
-    }
-    
-    public static void main(String args[])
-    {
-        test();
-    }
+ 
     
 }
