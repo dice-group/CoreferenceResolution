@@ -188,19 +188,19 @@ public class AxelsPreprocessing {
         Matrix matrix = new Basic2DMatrix(entityVocabulary.size(), tokenVocabulary.size());
         // go through every document ...
         int entityId, end;
-        for (int i = 0; i < tokenizedDocuments.length; ++i) {
+        for (int d = 0; d < tokenizedDocuments.length; ++d) {
             // ...and through every entity occurring inside the documents...
-            for (int j = 0; j < tokenizedDocuments[i].entities.length; ++j) {
-                entityId = entityIds[i][j];
+            for (int e = 0; e < tokenizedDocuments[d].entities.length; ++e) {
+                entityId = entityIds[d][e];
                 // ...and count the tokens before...
-                end = tokenizedDocuments[i].entities[j].start;
-                for (int t = Math.max(0, tokenizedDocuments[i].entities[j].start - windowSize); t < end; ++t) {
-                    matrix.set(entityId, tokenIds[i][t], matrix.get(entityId, tokenIds[i][t]) + 1);
+                end = tokenizedDocuments[d].entities[e].start;
+                for (int t = Math.max(0, tokenizedDocuments[d].entities[e].start - windowSize); t < end; ++t) {
+                    matrix.set(entityId, tokenIds[d][t], matrix.get(entityId, tokenIds[d][t]) + 1);
                 }
                 // ...and after the entity
-                end = Math.min(tokenIds[i].length, tokenizedDocuments[i].entities[j].end + windowSize);
-                for (int t = tokenizedDocuments[i].entities[j].end; t < end; ++t) {
-                    matrix.set(entityId, tokenIds[i][t], matrix.get(entityId, tokenIds[i][t]) + 1);
+                end = Math.min(tokenIds[d].length, tokenizedDocuments[d].entities[e].end + windowSize);
+                for (int t = tokenizedDocuments[d].entities[e].end; t < end; ++t) {
+                    matrix.set(entityId, tokenIds[d][t], matrix.get(entityId, tokenIds[d][t]) + 1);
                 }
             }
         }
