@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><corpus xmlns="http://semweb.unister.de/xml-corpus-schema-2013">
+<Document id="0">
+<DocumentName>Testdokument #1</DocumentName>
+<TextWithNamedEntities><SimpleTextPart>Dieser Text ist ein Testtext.</SimpleTextPart></TextWithNamedEntities>
+</Document>
+<Document id="1">
+<DocumentName>Bericht über den neuen Jaguar</DocumentName>
+<DocumentMultipleCategories>
+<Category>category1</Category>
+</DocumentMultipleCategories>
+<TextWithNamedEntities><SimpleTextPart>Der neue </SimpleTextPart><SignedNamedEntityInText uri="http://animal/Jaguar" source="manualAnnotation">Jaguar</SignedNamedEntityInText><SimpleTextPart> ist kein </SimpleTextPart><NamedEntityInText uri="http://car/VWGolf">Golf</NamedEntityInText><SimpleTextPart>.</SimpleTextPart></TextWithNamedEntities>
+</Document>
+<Document id="2">
+<DocumentName>Sport aktuell</DocumentName>
+<DocumentMultipleCategories>
+<Category>category1</Category>
+<Category>category2</Category>
+</DocumentMultipleCategories>
+<TextWithNamedEntities><SimpleTextPart>Am </SimpleTextPart><NamedEntityInText uri="http://geo/PersianGulf">persischen Golf</NamedEntityInText><SimpleTextPart> wird wieder </SimpleTextPart><SignedNamedEntityInText uri="http://sport/Golf" source="someSource">Golf</SignedNamedEntityInText><SimpleTextPart> gespielt!</SimpleTextPart></TextWithNamedEntities>
+</Document>
+</corpus>
