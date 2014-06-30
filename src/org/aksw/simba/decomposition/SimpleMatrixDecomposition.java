@@ -15,16 +15,17 @@ public class SimpleMatrixDecomposition implements MatrixDecomposition {
 
     Matrix L; //left matrix
     Matrix R; //right matrix
+    Matrix M;
     public static double DEFAULT_ALPHA = 0.0002;
     public static double DEFAULT_BETA = 0.02;
     public static double DEFAULT_THRESHOLD = 0.1;
     public static int MAX_STEPS = 10000;
 
-    public void decompose(Matrix M, int r) {
-        decompose(M, r, DEFAULT_ALPHA, DEFAULT_BETA, DEFAULT_THRESHOLD);
+    public void decompose(Matrix Ma, int r) {
+        decompose(Ma, r, DEFAULT_ALPHA, DEFAULT_BETA, DEFAULT_THRESHOLD);
     }
 
-    public Matrix rand(int rows, int columns) {
+    public Matrix init(int rows, int columns) {
         Matrix M = new Basic2DMatrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -35,6 +36,11 @@ public class SimpleMatrixDecomposition implements MatrixDecomposition {
         return M;
     }
 
+    public void init(int r)
+    {
+        L = init(M.rows(), r);
+        R = init(M.columns(), r);
+    }
     /**
      *
      * @param M
@@ -42,12 +48,11 @@ public class SimpleMatrixDecomposition implements MatrixDecomposition {
      * @param alpha Controls the step for learning
      * @param beta Controls the effect of the regularization
      */
-    public void decompose(Matrix M, int r, double alpha, double beta, double threshold) {
+    public void decompose(Matrix Ma, int r, double alpha, double beta, double threshold) {
+        M = Ma;
         Matrix E, M2;
         //1. Initialize L and R
-        L = rand(M.rows(), r);
-        R = rand(M.columns(), r);
-
+        init(r);
         Matrix L2, R2;
         int steps = 0;
         M2 = L.multiply(R.transpose());
