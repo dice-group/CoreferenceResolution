@@ -13,15 +13,15 @@ public class ClusterExp {
     public static void main(String args[]) {
 
         TokenizedDocument[] documents;
+        int rank = 10;
         MatrixDecomposition decomposition = new SimpleMatrixDecomposition();
         for (Corpora corpus : new Corpora[] { Corpora.REUTERS128, Corpora.RSS500 }) {
             documents = AxelsPreprocessing.getCorpus(corpus);
             for (int windowSize = 3; windowSize < 5; windowSize++) {
                 Matrix M = AxelsPreprocessing.createMatrix(documents, windowSize);
-                decomposition.decompose(M, M.rank());
+                decomposition.decompose(M, rank);
                 Clustering c = new Clustering();
-                System.out.println(c.cluster(M, null, 0.6));
-
+                System.out.println(c.cluster(decomposition.getLeftMatrix(), null, 0.6));
                 // TODO do eval
             }
         }
