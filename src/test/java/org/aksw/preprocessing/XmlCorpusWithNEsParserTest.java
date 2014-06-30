@@ -1,4 +1,4 @@
-package org.aksw.sandbox;
+package org.aksw.preprocessing;
 
 import org.aksw.preprocessing.datatypes.DocumentWithPositions;
 import org.aksw.preprocessing.datatypes.Entity;

@@ -1,4 +1,4 @@
-package org.aksw.sandbox;
+package org.aksw.preprocessing;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.aksw.preprocessing.datatypes.DocumentWithPositions;
 import org.aksw.preprocessing.datatypes.Entity;
 import org.aksw.preprocessing.datatypes.TokenizedDocument;
-import org.aksw.preprocessing.io.XmlCorpusParser;
+import org.aksw.preprocessing.io.XmlCorpusWithNEsParser;
 import org.aksw.preprocessing.nlp.Fox;
 import org.aksw.preprocessing.nlp.Tokenizer;
 import org.la4j.matrix.Matrix;
@@ -32,14 +32,37 @@ public class AxelsPreprocessing {
      * @return the entity word matrix
      */
     public static Matrix getCorpusAsMatrix(Corpora corpus, int windowSize) {
-        String texts[] = readCorpus(corpus);
-        DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
-        texts = null;
-        performNER(documentsWithPos);
+        // String texts[] = readCorpus(corpus);
+        // DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
+        DocumentWithPositions[] documentsWithPos = readCorpus(corpus);
+        getTokenizedDocuments(documentsWithPos);
+        // texts = null;
+        // performNER(documentsWithPos);
 
         TokenizedDocument[] tokenizedDocuments = mapEntitiesToTokens(documentsWithPos);
         documentsWithPos = null;
         return createMatrix(tokenizedDocuments, windowSize);
+    }
+    
+    public static TokenizedDocument[] getCorpus(Corpora corpus) {
+        // String texts[] = readCorpus(corpus);
+        // DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
+        DocumentWithPositions[] documentsWithPos = readCorpus(corpus);
+        getTokenizedDocuments(documentsWithPos);
+        // texts = null;
+        // performNER(documentsWithPos);
+
+        return mapEntitiesToTokens(documentsWithPos);
+    }
+    
+    
+
+    private static void getTokenizedDocuments(DocumentWithPositions[] documents) {
+        // for every token store its start and end (exclusive) position
+        Tokenizer tokenizer = new Tokenizer();
+        for (int i = 0; i < documents.length; ++i) {
+            documents[i].tokens = tokenizer.tokenize(documents[i].text);
+        }
     }
 
     protected static DocumentWithPositions[] getTokenizedDocuments(String[] texts) {
@@ -66,7 +89,8 @@ public class AxelsPreprocessing {
         }
     }
 
-    protected static String[] readCorpus(Corpora corpus) {
+    protected static DocumentWithPositions[] readCorpus(Corpora corpus) {
+        // protected static String[] readCorpus(Corpora corpus) {
         /*
          * NOTE: If there are corpora with another format than Micha's wired XML, you can decide how they should be
          * loaded inside this method
@@ -74,20 +98,24 @@ public class AxelsPreprocessing {
         return readCorpusFromXML(corpus);
     }
 
-    protected static String[] readCorpusFromXML(Corpora corpus) {
+    protected static DocumentWithPositions[] readCorpusFromXML(Corpora corpus) {
+        // protected static String[] readCorpusFromXML(Corpora corpus) {
         InputStream resource = AxelsPreprocessing.class.getClassLoader().getResourceAsStream(corpus.fileName);
         if (resource == null) {
             LOGGER.error("Couldn't find a corpus with the name \"" + corpus + "\". Returning null.");
             return null;
         }
-        XmlCorpusParser parser = new XmlCorpusParser();
-        String texts[] = parser.parse(resource);
+        // XmlCorpusParser parser = new XmlCorpusParser();
+        // String texts[] = parser.parse(resource);
+        XmlCorpusWithNEsParser parser = new XmlCorpusWithNEsParser();
+        DocumentWithPositions documents[] = parser.parse(resource);
         try {
             resource.close();
         } catch (Exception e) {
             // nothing to do
         }
-        return texts;
+        // return texts;
+        return documents;
     }
 
     public static TokenizedDocument[] mapEntitiesToTokens(DocumentWithPositions documentsWithPos[]) {

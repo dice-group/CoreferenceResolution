@@ -1,4 +1,4 @@
-package org.aksw.sandbox;
+package org.aksw.simba.clustering;
 
 import org.aksw.simba.clustering.Clustering;
 import org.junit.Test;
