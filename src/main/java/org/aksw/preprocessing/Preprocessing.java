@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import com.carrotsearch.hppc.ObjectIntOpenHashMap;
 
-public class AxelsPreprocessing {
+public class Preprocessing {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AxelsPreprocessing.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Preprocessing.class);
 
     /**
      * This method loads the given corpus, searches named entities using FOX and creates context vectors for these named
@@ -43,7 +43,7 @@ public class AxelsPreprocessing {
         documentsWithPos = null;
         return createMatrix(tokenizedDocuments, windowSize);
     }
-    
+
     public static TokenizedDocument[] getCorpus(Corpora corpus) {
         // String texts[] = readCorpus(corpus);
         // DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
@@ -54,8 +54,6 @@ public class AxelsPreprocessing {
 
         return mapEntitiesToTokens(documentsWithPos);
     }
-    
-    
 
     private static void getTokenizedDocuments(DocumentWithPositions[] documents) {
         // for every token store its start and end (exclusive) position
@@ -100,7 +98,7 @@ public class AxelsPreprocessing {
 
     protected static DocumentWithPositions[] readCorpusFromXML(Corpora corpus) {
         // protected static String[] readCorpusFromXML(Corpora corpus) {
-        InputStream resource = AxelsPreprocessing.class.getClassLoader().getResourceAsStream(corpus.fileName);
+        InputStream resource = Preprocessing.class.getClassLoader().getResourceAsStream(corpus.fileName);
         if (resource == null) {
             LOGGER.error("Couldn't find a corpus with the name \"" + corpus + "\". Returning null.");
             return null;
@@ -199,27 +197,30 @@ public class AxelsPreprocessing {
             }
         }
 
-        ObjectIntOpenHashMap<String> entityVocabulary = new ObjectIntOpenHashMap<String>();
-        int entityIds[][] = new int[tokenizedDocuments.length][];
+//        ObjectIntOpenHashMap<String> entityVocabulary = new ObjectIntOpenHashMap<String>();
+        int entityCount = 0;
+//        int entityIds[][] = new int[tokenizedDocuments.length][];
         for (int i = 0; i < tokenizedDocuments.length; ++i) {
-            entityIds[i] = new int[tokenizedDocuments[i].entities.length];
-            for (int j = 0; j < tokenizedDocuments[i].entities.length; ++j) {
-                if (entityVocabulary.containsKey(tokenizedDocuments[i].entities[j].URI)) {
-                    entityIds[i][j] = entityVocabulary.lget();
-                } else {
-                    entityIds[i][j] = entityVocabulary.size();
-                    entityVocabulary.put(tokenizedDocuments[i].entities[j].URI, entityIds[i][j]);
-                }
-            }
+            entityCount += tokenizedDocuments[i].entities.length;
+//            entityIds[i] = new int[tokenizedDocuments[i].entities.length];
+//            for (int j = 0; j < tokenizedDocuments[i].entities.length; ++j) {
+//                if (entityVocabulary.containsKey(tokenizedDocuments[i].entities[j].URI)) {
+//                    entityIds[i][j] = entityVocabulary.lget();
+//                } else {
+//                    entityIds[i][j] = entityVocabulary.size();
+//                    entityVocabulary.put(tokenizedDocuments[i].entities[j].URI, entityIds[i][j]);
+//                }
+//            }
         }
 
-        Matrix matrix = new Basic2DMatrix(entityVocabulary.size(), tokenVocabulary.size());
+//        Matrix matrix = new Basic2DMatrix(entityVocabulary.size(), tokenVocabulary.size());
+        Matrix matrix = new Basic2DMatrix(entityCount, tokenVocabulary.size());
         // go through every document ...
-        int entityId, end;
+        int entityId = 0, end;
         for (int d = 0; d < tokenizedDocuments.length; ++d) {
             // ...and through every entity occurring inside the documents...
             for (int e = 0; e < tokenizedDocuments[d].entities.length; ++e) {
-                entityId = entityIds[d][e];
+//                entityId = entityIds[d][e];
                 // ...and count the tokens before...
                 end = tokenizedDocuments[d].entities[e].start;
                 for (int t = Math.max(0, tokenizedDocuments[d].entities[e].start - windowSize); t < end; ++t) {
@@ -230,6 +231,7 @@ public class AxelsPreprocessing {
                 for (int t = tokenizedDocuments[d].entities[e].end; t < end; ++t) {
                     matrix.set(entityId, tokenIds[d][t], matrix.get(entityId, tokenIds[d][t]) + 1);
                 }
+                ++entityId;
             }
         }
 

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
-import org.aksw.preprocessing.AxelsPreprocessing;
+import org.aksw.preprocessing.Preprocessing;
 import org.aksw.preprocessing.datatypes.Entity;
 import org.aksw.preprocessing.datatypes.TokenizedDocument;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import org.la4j.matrix.Matrix;
 import org.la4j.matrix.dense.Basic2DMatrix;
 
 @RunWith(Parameterized.class)
-public class AxelsPreprocessingMatrixCreationTest {
+public class PreprocessingMatrixCreationTest {
 
     @Parameters
     public static Collection<Object[]> data() {
@@ -43,16 +43,16 @@ public class AxelsPreprocessingMatrixCreationTest {
     private TokenizedDocument documents[];
     private double expectedMatrix[][];
 
-    public AxelsPreprocessingMatrixCreationTest(TokenizedDocument documents[], double expectedMatrix[][]) {
+    public PreprocessingMatrixCreationTest(TokenizedDocument documents[], double expectedMatrix[][]) {
         this.documents = documents;
         this.expectedMatrix = expectedMatrix;
     }
 
     @Test
     public void test() {
-        Matrix matrix = AxelsPreprocessing.createMatrix(documents, 3);
-        for (int i = 0; i < expectedMatrix.length; i++) {
-            for (int k = 0; k < expectedMatrix[i].length; k++) {
+        Matrix matrix = Preprocessing.createMatrix(documents, 3);
+        for (int i = 0; i < expectedMatrix.length; ++i) {
+            for (int k = 0; k < expectedMatrix[i].length; ++k) {
                 Assert.assertEquals(matrix.toString() + " does not equal the expected "
                         + (new Basic2DMatrix(expectedMatrix)).toString(), expectedMatrix[i][k], matrix.get(i, k));
             }

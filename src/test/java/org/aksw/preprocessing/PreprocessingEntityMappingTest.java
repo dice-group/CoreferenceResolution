@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
-import org.aksw.preprocessing.AxelsPreprocessing;
+import org.aksw.preprocessing.Preprocessing;
 import org.aksw.preprocessing.datatypes.DocumentWithPositions;
 import org.aksw.preprocessing.datatypes.Entity;
 import org.aksw.preprocessing.datatypes.TokenizedDocument;
@@ -15,7 +15,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class AxelsPreprocessingEntityMappingTest {
+public class PreprocessingEntityMappingTest {
 
     @Parameters
     public static Collection<Object[]> data() {
@@ -55,7 +55,7 @@ public class AxelsPreprocessingEntityMappingTest {
     private Entity entities[];
     private int expectedNewPositions[][];
 
-    public AxelsPreprocessingEntityMappingTest(String text, String[] tokens, Entity[] entities,
+    public PreprocessingEntityMappingTest(String text, String[] tokens, Entity[] entities,
             int[][] expectedNewPositions) {
         this.text = text;
         this.tokens = tokens;
@@ -65,7 +65,7 @@ public class AxelsPreprocessingEntityMappingTest {
 
     @Test
     public void test() {
-        TokenizedDocument documents[] = AxelsPreprocessing
+        TokenizedDocument documents[] = Preprocessing
                 .mapEntitiesToTokens(new DocumentWithPositions[] { new DocumentWithPositions(text, tokens,
                         entities) });
         Assert.assertEquals(expectedNewPositions.length, documents[0].entities.length);
