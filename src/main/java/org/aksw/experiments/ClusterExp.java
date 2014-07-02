@@ -6,36 +6,43 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.aksw.preprocessing.EntityLabelSimMatrixCreator;
 import org.aksw.preprocessing.Preprocessing;
 import org.aksw.preprocessing.Preprocessing.Corpora;
 import org.aksw.preprocessing.datatypes.TokenizedDocument;
 import org.aksw.simba.clustering.Clustering;
+import org.aksw.simba.decomposition.CorrelationBasedDecomposition;
 import org.aksw.simba.decomposition.SimpleMatrixDecomposition;
 import org.la4j.matrix.Matrix;
 
 public class ClusterExp {
 
-    private static final double ALPHA = 1.0E-4;
-    private static final double BETA = 0.01;
+    // private static final double ALPHA = 5.0E-5;
+    // private static final double BETA = 0.01;
+    private static final double ALPHA = 0.0000005;
+    private static final double BETA = 0.001;
 
     public static void main(String args[]) throws FileNotFoundException {
 
         PrintStream out;
         TokenizedDocument[] documents;
-        int rank = 10;
+        int rank = 100;
         double error;
         String[] entityIdUriMapping;
-        for (Corpora corpus : new Corpora[] { /* Corpora.REUTERS128, */Corpora.RSS500 }) {
+        Matrix entityStringSimMatrix;
+        for (Corpora corpus : new Corpora[] { Corpora.REUTERS128, Corpora.RSS500 }) {
             documents = Preprocessing.getCorpus(corpus);
+            entityStringSimMatrix = EntityLabelSimMatrixCreator.getEntityLabelSimMatrix(documents);
             entityIdUriMapping = createEntityIdUriMapping(documents);
             for (int windowSize = 3; windowSize < 5; windowSize++) {
                 Matrix M = Preprocessing.createMatrix(documents, windowSize);
                 out = new PrintStream("ClusterExp_" + corpus.toString() + "_" + windowSize + ".tsv");
+                // CorrelationBasedDecomposition decomposition = new CorrelationBasedDecomposition();
                 SimpleMatrixDecomposition decomposition = new SimpleMatrixDecomposition();
                 error = decomposition.decompose(M, rank, ALPHA, BETA, SimpleMatrixDecomposition.DEFAULT_THRESHOLD);
                 if ((!Double.isInfinite(error)) && (!Double.isNaN(error))) {
                     Clustering c = new Clustering();
-                    Set<Set<Integer>> clusters = c.cluster(decomposition.getLeftMatrix(), null, 0.6);
+                    Set<Set<Integer>> clusters = c.cluster(decomposition.getLeftMatrix(), entityStringSimMatrix, 0.6);
                     Map<String, int[]> uriClusterMapping = createUriClusterMapping(entityIdUriMapping, clusters);
                     calculateAndPrintPrecisions(uriClusterMapping, clusters.size(), out);
                 } else {

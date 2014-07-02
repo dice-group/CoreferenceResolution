@@ -21,24 +21,27 @@ import de.uni_leipzig.gk.cluster.BorderFlowHard;
 /**
  * Assume a latent feature matrix as well as a known similarity for the entities
  * resources that are to be clustered (for example string similarity for words).
- *
+ * 
  * @author ngonga
  */
 public class Clustering {
 
     /**
      * 
-     * @param latentFeatures Latent feature matrix
-     * @param similarityMatrix Can be null
-     * @param threshold Similarity threshold for building the graph
-     * @return 
+     * @param latentFeatures
+     *            Latent feature matrix
+     * @param similarityMatrix
+     *            Can be null
+     * @param threshold
+     *            Similarity threshold for building the graph
+     * @return
      */
     public Set<Set<Integer>> cluster(Matrix latentFeatures, Matrix similarityMatrix, double threshold) {
         double norm;
         try {
             File f = File.createTempFile("aaa", "aaa");
             PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f.getAbsolutePath())));
-            //norm the latent feature matrix
+            // norm the latent feature matrix
             for (int i = 0; i < latentFeatures.rows(); i++) {
                 Vector v = latentFeatures.getRow(i);
                 norm = v.fold(Vectors.mkEuclideanNormAccumulator());
@@ -46,7 +49,7 @@ public class Clustering {
                 latentFeatures.setRow(i, v);
             }
 
-            //build graph
+            // build graph
             double similarity;
             for (int i = 0; i < latentFeatures.rows(); i++) {
                 for (int j = i + 1; j < latentFeatures.rows(); j++) {
@@ -64,11 +67,12 @@ public class Clustering {
                 }
             }
             writer.close();
-            //cluster graph
+            // cluster graph
             BorderFlowHard bf = new BorderFlowHard(f.getAbsolutePath());
-            bf.hardPartitioning = true;
+            // bf.hardPartitioning = true;
+            bf.hardPartitioning = false;
             Map<Set<String>, Set<String>> output = bf.cluster(-1d, true, true, true);
-            //convert results and return
+            // convert results and return
             Set<Set<Integer>> result = new HashSet<Set<Integer>>();
             for (Set<String> key : output.keySet()) {
                 Set<String> value = output.get(key);
@@ -84,7 +88,5 @@ public class Clustering {
         }
         return null;
     }
-    
- 
-    
+
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.org.aksw.simba.decomposition;
+package org.aksw.simba.decomposition;
 
 import java.util.*;
 import org.aksw.simba.decomposition.SimpleMatrixDecomposition;
