@@ -26,7 +26,7 @@ public class SimpleMatrixDecomposition implements MatrixDecomposition {
     }
 
     public double decompose(Matrix Ma, int r, double alpha, double beta, double threshold) {
-        return decompose(Ma, r, DEFAULT_ALPHA, DEFAULT_BETA, DEFAULT_THRESHOLD, MAX_STEPS);
+        return decompose(Ma, r, alpha, beta, threshold, MAX_STEPS);
     }
 
     public Matrix init(int rows, int columns) {

@@ -17,7 +17,7 @@ public class AlphaBetaSearchExperiment {
         TokenizedDocument[] documents;
         int rank = 100;
         double error;
-        double threshold = 0.1;
+        double threshold = 0.0;
         double maxSteps = 100;
         for (Corpora corpus : new Corpora[] { Corpora.REUTERS128, Corpora.RSS500 }) {
             documents = Preprocessing.getCorpus(corpus);

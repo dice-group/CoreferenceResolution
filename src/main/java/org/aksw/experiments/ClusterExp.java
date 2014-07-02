@@ -11,7 +11,6 @@ import org.aksw.preprocessing.Preprocessing;
 import org.aksw.preprocessing.Preprocessing.Corpora;
 import org.aksw.preprocessing.datatypes.TokenizedDocument;
 import org.aksw.simba.clustering.Clustering;
-import org.aksw.simba.decomposition.CorrelationBasedDecomposition;
 import org.aksw.simba.decomposition.SimpleMatrixDecomposition;
 import org.la4j.matrix.Matrix;
 
