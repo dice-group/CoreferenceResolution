@@ -13,12 +13,12 @@ import org.la4j.matrix.dense.Basic2DMatrix;
  */
 public class SimpleMatrixDecomposition implements MatrixDecomposition {
 
-    Matrix L; // left matrix
-    Matrix R; // right matrix
-    Matrix M;
+    public Matrix L; // left matrix
+    public Matrix R; // right matrix
+    public Matrix M;
     public static double DEFAULT_ALPHA = 0.0002;
     public static double DEFAULT_BETA = 0.02;
-    public static double DEFAULT_THRESHOLD = 0.1;
+    public static double DEFAULT_THRESHOLD = 0.01;
     public static int MAX_STEPS = 10000;
 
     public double decompose(Matrix Ma, int r) {
@@ -109,7 +109,7 @@ public class SimpleMatrixDecomposition implements MatrixDecomposition {
                     error = error + E.get(i, j) * E.get(i, j) / (M.rows() * M.columns());
                 }
             }
-            // System.out.println(error);
+            System.out.println(error);
             if (error < threshold) {
                 break;
             }
