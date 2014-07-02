@@ -1,7 +1,10 @@
 package org.aksw.preprocessing;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.aksw.preprocessing.datatypes.DocumentWithPositions;
 import org.aksw.preprocessing.datatypes.Entity;
@@ -9,6 +12,7 @@ import org.aksw.preprocessing.datatypes.TokenizedDocument;
 import org.aksw.preprocessing.io.XmlCorpusWithNEsParser;
 import org.aksw.preprocessing.nlp.Fox;
 import org.aksw.preprocessing.nlp.Tokenizer;
+import org.apache.commons.io.IOUtils;
 import org.la4j.matrix.Matrix;
 import org.la4j.matrix.dense.Basic2DMatrix;
 import org.slf4j.Logger;
@@ -19,6 +23,8 @@ import com.carrotsearch.hppc.ObjectIntOpenHashMap;
 public class Preprocessing {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Preprocessing.class);
+
+    private static final String STOPWORD_FILE = "english.stopwords";
 
     /**
      * This method loads the given corpus, searches named entities using FOX and creates context vectors for these named
@@ -75,6 +81,33 @@ public class Preprocessing {
             docs[i] = doc;
         }
         return docs;
+    }
+
+    protected static void getFilterStopWords(DocumentWithPositions[] documents) {
+        Set<String> stopwords;
+        try {
+            InputStream is = Preprocessing.class.getClassLoader().getResourceAsStream(STOPWORD_FILE);
+            stopwords = new HashSet<String>(IOUtils.readLines(is));
+            is.close();
+        } catch (Exception e) {
+            LOGGER.error("Couldn't read stop word list. Can't remove them from the texts!", e);
+            stopwords = new HashSet<String>();
+        }
+
+        ArrayList<String> goodTokens = new ArrayList<String>();
+        String[] tokens;
+        String token;
+        for (int i = 0; i < documents.length; ++i) {
+            tokens = documents[i].tokens;
+            for (int j = 0; j < tokens.length; ++j) {
+                token = tokens[j].toLowerCase();
+                if (!stopwords.contains(token)) {
+                    goodTokens.add(token);
+                }
+            }
+            documents[i].tokens = goodTokens.toArray(new String[goodTokens.size()]);
+            goodTokens.clear();
+        }
     }
 
     protected static void performNER(DocumentWithPositions documentsWithPos[]) {
@@ -197,30 +230,30 @@ public class Preprocessing {
             }
         }
 
-//        ObjectIntOpenHashMap<String> entityVocabulary = new ObjectIntOpenHashMap<String>();
+        // ObjectIntOpenHashMap<String> entityVocabulary = new ObjectIntOpenHashMap<String>();
         int entityCount = 0;
-//        int entityIds[][] = new int[tokenizedDocuments.length][];
+        // int entityIds[][] = new int[tokenizedDocuments.length][];
         for (int i = 0; i < tokenizedDocuments.length; ++i) {
             entityCount += tokenizedDocuments[i].entities.length;
-//            entityIds[i] = new int[tokenizedDocuments[i].entities.length];
-//            for (int j = 0; j < tokenizedDocuments[i].entities.length; ++j) {
-//                if (entityVocabulary.containsKey(tokenizedDocuments[i].entities[j].URI)) {
-//                    entityIds[i][j] = entityVocabulary.lget();
-//                } else {
-//                    entityIds[i][j] = entityVocabulary.size();
-//                    entityVocabulary.put(tokenizedDocuments[i].entities[j].URI, entityIds[i][j]);
-//                }
-//            }
+            // entityIds[i] = new int[tokenizedDocuments[i].entities.length];
+            // for (int j = 0; j < tokenizedDocuments[i].entities.length; ++j) {
+            // if (entityVocabulary.containsKey(tokenizedDocuments[i].entities[j].URI)) {
+            // entityIds[i][j] = entityVocabulary.lget();
+            // } else {
+            // entityIds[i][j] = entityVocabulary.size();
+            // entityVocabulary.put(tokenizedDocuments[i].entities[j].URI, entityIds[i][j]);
+            // }
+            // }
         }
 
-//        Matrix matrix = new Basic2DMatrix(entityVocabulary.size(), tokenVocabulary.size());
+        // Matrix matrix = new Basic2DMatrix(entityVocabulary.size(), tokenVocabulary.size());
         Matrix matrix = new Basic2DMatrix(entityCount, tokenVocabulary.size());
         // go through every document ...
         int entityId = 0, end;
         for (int d = 0; d < tokenizedDocuments.length; ++d) {
             // ...and through every entity occurring inside the documents...
             for (int e = 0; e < tokenizedDocuments[d].entities.length; ++e) {
-//                entityId = entityIds[d][e];
+                // entityId = entityIds[d][e];
                 // ...and count the tokens before...
                 end = tokenizedDocuments[d].entities[e].start;
                 for (int t = Math.max(0, tokenizedDocuments[d].entities[e].start - windowSize); t < end; ++t) {
