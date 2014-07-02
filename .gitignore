@@ -5,3 +5,4 @@
 .settings/
 log.out
 *.tsv
+*.txt
