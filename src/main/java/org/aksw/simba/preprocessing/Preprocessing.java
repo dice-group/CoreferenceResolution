@@ -24,7 +24,8 @@ public class Preprocessing {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Preprocessing.class);
 
-    private static final String STOPWORD_FILE = "english.stopwords";
+    private static final String GER_STOPWORD_FILE = "german.stopwords";
+    private static final String ENG_STOPWORD_FILE = "english.stopwords";
 
     /**
      * This method loads the given corpus, searches named entities using FOX and creates context vectors for these named
@@ -55,6 +56,7 @@ public class Preprocessing {
         // DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
         DocumentWithPositions[] documentsWithPos = readCorpus(corpus);
         getTokenizedDocuments(documentsWithPos);
+        filterStopWords(documentsWithPos, corpus.language);
         // texts = null;
         // performNER(documentsWithPos);
 
@@ -83,10 +85,11 @@ public class Preprocessing {
         return docs;
     }
 
-    protected static void getFilterStopWords(DocumentWithPositions[] documents) {
+    protected static void filterStopWords(DocumentWithPositions[] documents, String language) {
         Set<String> stopwords;
         try {
-            InputStream is = Preprocessing.class.getClassLoader().getResourceAsStream(STOPWORD_FILE);
+            InputStream is = Preprocessing.class.getClassLoader().getResourceAsStream(
+                    language.equals("GER") ? GER_STOPWORD_FILE : ENG_STOPWORD_FILE);
             stopwords = new HashSet<String>(IOUtils.readLines(is));
             is.close();
         } catch (Exception e) {
@@ -272,13 +275,16 @@ public class Preprocessing {
     }
 
     public static enum Corpora {
-        RSS500("500newsgoldstandard.xml"),
-        REUTERS128("reuters.xml");
+        GOLF("german_corpus.xml", "GER"),
+        RSS500("500newsgoldstandard.xml", "ENG"),
+        REUTERS128("reuters.xml", "ENG");
 
         public String fileName;
+        public String language;
 
-        private Corpora(String fileName) {
+        private Corpora(String fileName, String language) {
             this.fileName = fileName;
+            this.language = language;
         }
     }
 }
