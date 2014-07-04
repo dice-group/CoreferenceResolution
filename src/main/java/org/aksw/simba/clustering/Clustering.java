@@ -25,7 +25,6 @@ import de.uni_leipzig.gk.cluster.BorderFlowHard;
  * @author ngonga
  */
 public class Clustering {
-
     /**
      * 
      * @param latentFeatures
@@ -37,9 +36,29 @@ public class Clustering {
      * @return
      */
     public Set<Set<Integer>> cluster(Matrix latentFeatures, Matrix similarityMatrix, double threshold) {
+        return cluster(latentFeatures, similarityMatrix, threshold, null);
+    }
+
+    /**
+     * 
+     * @param latentFeatures
+     *            Latent feature matrix
+     * @param similarityMatrix
+     *            Can be null
+     * @param threshold
+     *            Similarity threshold for building the graph
+     * @return
+     */
+    public Set<Set<Integer>> cluster(Matrix latentFeatures, Matrix similarityMatrix, double threshold,
+            String graphFileName) {
         double norm;
         try {
-            File f = File.createTempFile("aaa", "aaa");
+            File f = null;
+            if (graphFileName == null) {
+                f = File.createTempFile("aaa", "aaa");
+            } else {
+                f = new File(graphFileName);
+            }
             PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f.getAbsolutePath())));
             // norm the latent feature matrix
             for (int i = 0; i < latentFeatures.rows(); i++) {

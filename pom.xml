@@ -4,19 +4,6 @@
     <groupId>CoreferenceResolution</groupId>
     <artifactId>CoreferenceResolution</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target />
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <repositories>
         <repository>
             <id>clojars.org</id>
@@ -31,6 +18,11 @@
             <id>eclipse</id>
             <name>Eclipse Maven Repository</name>
             <url>http://maven.eclipse.org/nexus/content/groups/maven-central</url>
+        </repository>
+        <!-- Let's use a local repository for the local libraries of this project -->
+        <repository>
+            <id>local Repo</id>
+            <url>file://${project.basedir}/lib</url>
         </repository>
     </repositories>
     <properties>
@@ -103,5 +95,69 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- The stuff needed for clustering -->
+        <dependency>
+            <groupId>de.uni_leipzig</groupId>
+            <artifactId>clustering</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>colt</groupId>
+            <artifactId>colt</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>concurrent</groupId>
+            <artifactId>concurrent</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>gnu</groupId>
+            <artifactId>getopt</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>connector</artifactId>
+            <version>3.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>sql</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.aksw.simba.experiments.DiffRankClusterExp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

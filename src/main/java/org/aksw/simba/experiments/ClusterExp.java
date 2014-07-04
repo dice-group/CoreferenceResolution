@@ -37,7 +37,7 @@ public class ClusterExp {
         double error;
         String[] entityIdUriMapping;
         Matrix entityStringSimMatrix;
-        for (Corpora corpus : new Corpora[] { Corpora.REUTERS128, Corpora.RSS500 }) {
+        for (Corpora corpus : new Corpora[] { Corpora.REUTERS128, Corpora.RSS500, Corpora.GOLF }) {
             documents = Preprocessing.getCorpus(corpus);
             entityStringSimMatrix = EntityLabelSimMatrixCreator.getEntityLabelSimMatrix(documents);
             entityIdUriMapping = createEntityIdUriMapping(documents);
@@ -94,7 +94,7 @@ public class ClusterExp {
         }
     }
 
-    private static IntOpenHashSet[] transformSet(Set<Set<Integer>> clusters) {
+    protected static IntOpenHashSet[] transformSet(Set<Set<Integer>> clusters) {
         IntOpenHashSet[] newClusters = new IntOpenHashSet[clusters.size()];
         int pos = 0;
         for (Set<Integer> cluster : clusters) {
@@ -238,6 +238,9 @@ public class ClusterExp {
         recall = (double) truePos / (double) (truePos + falseNeg);
         out.println("macro measures\t" + instanceCount + "\t" + precision + "\t" + recall + "\t"
                 + (2 * precision * recall / (precision + recall)));
-
+    }
+    
+    protected static Matrix normalizeMatrix(Matrix m) {
+        return m.divide(m.max());
     }
 }
