@@ -29,9 +29,12 @@ public class DiffRankClusterExp extends ClusterExp {
     public static void main(String args[]) throws FileNotFoundException {
         if (args.length < 3) {
             System.out.println("Usage: DiffRankClusterExp <corpus-name> <inclusive-start-rank> <exclusive-end-rank>");
+            return;
         }
-        Corpora corpus = Corpora.valueOf(args[0]);
-        if (corpus == null) {
+        Corpora corpus = null;
+        try {
+            corpus = Corpora.valueOf(args[0]);
+        } catch (Exception e) {
             System.out.println("Couldn't find this corpus. Aborting.");
             return;
         }
@@ -70,9 +73,9 @@ public class DiffRankClusterExp extends ClusterExp {
 
         for (int rank = startRank; rank < endRank; ++rank) {
             System.out.println("Running decomposition experiment...");
-            startTime = System.currentTimeMillis();
             // CorrelationBasedDecomposition decomposition = new CorrelationBasedDecomposition();
             System.out.println("Starting Decomposition...");
+            startTime = System.currentTimeMillis();
             SimpleMatrixDecomposition decomposition = new SimpleMatrixDecomposition();
             error = decomposition.decompose(M, rank, ALPHA, BETA, DECOMPOSITION_THRESHOLD);
             timeNeededDecomp = System.currentTimeMillis() - startTime;
@@ -101,7 +104,7 @@ public class DiffRankClusterExp extends ClusterExp {
                 out.println("time needed preprocessing (in ms)\t" + (timeNeededPreproc));
                 out.println("time needed decomposition (in ms)\t" + (timeNeededDecomp));
                 out.println("time needed clustering (in ms)\t" + (timeNeededClustering));
-                out.println("time needed (in ms)\t" + (timeNeededPreproc + timeNeededDecomp));
+                out.println("time needed (in ms)\t" + (timeNeededPreproc + timeNeededDecomp + timeNeededClustering));
                 out.close();
             } else {
                 System.out.println("Decomposition did not work: error=" + error);

@@ -4,7 +4,3 @@
 .project
 .settings/
 log.out
-*.tsv
-*.txt
-/rankExp
-/graphs
