@@ -41,13 +41,15 @@ public class Preprocessing {
     public static Matrix getCorpusAsMatrix(Corpora corpus, int windowSize) {
         // String texts[] = readCorpus(corpus);
         // DocumentWithPositions[] documentsWithPos = getTokenizedDocuments(texts);
-        DocumentWithPositions[] documentsWithPos = readCorpus(corpus);
-        getTokenizedDocuments(documentsWithPos);
-        // texts = null;
-        // performNER(documentsWithPos);
-
-        TokenizedDocument[] tokenizedDocuments = mapEntitiesToTokens(documentsWithPos);
-        documentsWithPos = null;
+        // DocumentWithPositions[] documentsWithPos = readCorpus(corpus);
+        // getTokenizedDocuments(documentsWithPos);
+        // filterStopWords(documentsWithPos, corpus.language);
+        // // texts = null;
+        // // performNER(documentsWithPos);
+        //
+        // TokenizedDocument[] tokenizedDocuments = mapEntitiesToTokens(documentsWithPos);
+        TokenizedDocument[] tokenizedDocuments = getCorpus(corpus);
+        // documentsWithPos = null;
         return createMatrix(tokenizedDocuments, windowSize);
     }
 
@@ -104,7 +106,10 @@ public class Preprocessing {
             tokens = documents[i].tokens;
             for (int j = 0; j < tokens.length; ++j) {
                 token = tokens[j].toLowerCase();
-                if (!stopwords.contains(token)) {
+                // The token MUST NOT be a stop word nor a single punctuation
+                if ((!stopwords.contains(token))
+                        && ((token.length() > 1) || ((token.length() == 1) && (Character.isLetterOrDigit(token
+                                .charAt(0)))))) {
                     goodTokens.add(token);
                 }
             }
@@ -169,7 +174,7 @@ public class Preprocessing {
 
             // the entities have a position in the text (= counted in chars) which has to be translated to the position
             // in the tokenized text (= counted in tokens)
-            text = documentsWithPos[i].text;
+            text = documentsWithPos[i].text.toLowerCase();
             currentEntity = 0;
             newStart = -1;
             newEnd = -1;
