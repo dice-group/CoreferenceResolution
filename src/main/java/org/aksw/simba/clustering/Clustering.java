@@ -70,21 +70,31 @@ public class Clustering {
 
             // build graph
             double similarity;
-            for (int i = 0; i < latentFeatures.rows(); i++) {
-                for (int j = i + 1; j < latentFeatures.rows(); j++) {
+            Vector v1, v2;
+            int rows = latentFeatures.rows(), columns = latentFeatures.columns();
+            int edgeCount = 0;
+            for (int i = 0; i < rows; ++i) {
+                v1 = latentFeatures.getRow(i);
+                for (int j = i + 1; j < rows; ++j) {
                     similarity = 0d;
-                    for (int k = 0; k < latentFeatures.getRow(i).length(); k++) {
-                        similarity = similarity + latentFeatures.getRow(i).get(k) * latentFeatures.getRow(j).get(k);
+                    v2 = latentFeatures.getRow(j);
+                    for (int k = 0; k < columns; ++k) {
+                        similarity = similarity + v1.get(k) * v2.get(k);
                     }
                     if (similarityMatrix != null) {
                         similarity = similarity * similarityMatrix.get(i, j);
                     }
                     if (similarity >= threshold) {
                         writer.println(i + "\t" + j + "\t" + similarity);
-                        System.out.println(i + "\t" + j + "\t" + similarity);
+                        // System.out.println(i + "\t" + j + "\t" + similarity);
+                        ++edgeCount;
                     }
                 }
+                if (((i + 1) % 100) == 0) {
+                    System.out.println("Saw " + (i + 1) + " entities and added " + edgeCount + " edges to the graph.");
+                }
             }
+            System.out.println("Saw " + rows + " entities and added " + edgeCount + " edges to the graph.");
             writer.close();
             // cluster graph
             BorderFlowHard bf = new BorderFlowHard(f.getAbsolutePath());
