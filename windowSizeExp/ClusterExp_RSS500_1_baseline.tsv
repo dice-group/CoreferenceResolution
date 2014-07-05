@@ -849,6 +849,6 @@ http://dbpedia.org/resource/John_Adams	1	0.3333333333333333	1.0	0.5
 http://dbpedia.org/resource/Ken_Whisenhunt	1	0.25	1.0	0.4
 http://aksw.org/notInWiki/Ryan_Simms	1	0.5	1.0	0.6666666666666666
 macro measures	2000	0.610062893081761	0.582	0.5957011258955988
-time needed preprocessing (in ms)	2525
-time needed clustering (in ms)	27391166
-time needed (in ms)	27393691
+time needed preprocessing (in ms)	2557
+time needed clustering (in ms)	25321
+time needed (in ms)	27878

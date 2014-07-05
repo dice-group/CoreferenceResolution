@@ -444,6 +444,6 @@ http://aksw.org/notInWiki/OBrien-Kreitzberg	1	1.0	1.0	1.0
 http://aksw.org/notInWiki/Asiavest_Pty_Ltd	1	1.0	1.0	1.0
 http://dbpedia.org/resource/Lloyds_Bank_of_Canada	1	0.2	1.0	0.33333333333333337
 macro measures	1760	0.8324607329842932	0.5420454545454545	0.6565726083964212
-time needed preprocessing (in ms)	2390
-time needed clustering (in ms)	13529809
-time needed (in ms)	13532199
+time needed preprocessing (in ms)	2409
+time needed clustering (in ms)	5493
+time needed (in ms)	7902
